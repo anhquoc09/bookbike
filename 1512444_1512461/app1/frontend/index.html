@@ -12,45 +12,35 @@
 
 <body>
 
-<div id="form">
+<div class="container">
+    <h1>Đặt xe máy</h1>
     <form>
-                <div class="cap" >Đặt xe máy</div>
-
-                <div class="row">
-                    <div class="col-sm-4">.col-sm-4</div>
-                    <div class="col-sm-4">.col-sm-4</div>
-                    <div class="col-sm-4">.col-sm-4</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Tên
+                    <input type="text" name="name" placeholder="Tên...">
+                </label>
+                <label>Số điện thoại
+                    <input type="text" name="phone" placeholder="Số điện thoại...">
+                </label>
+                <label>Địa chỉ
+                    <input type="text" name="address" placeholder="Địa chỉ...">
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <label>Ghi chú
+                    <textarea rows="6" placeholder="Ghi chú..."></textarea>
+                </label>
+                <div>
+                    <input type="submit" value="Đặt xe">
                 </div>
-                <td>
-                    <label>Tên
-                        <input type="text" name="name" placeholder="Tên...">
-                    </label>
-                    <label>Số điện thoại
-                        <input type="text" name="phone" placeholder="Số điện thoại...">
-                    </label>
-                    <label>Địa chỉ
-                        <input type="text" name="address" placeholder="Địa chỉ...">
-                    </label>
-                </td>
-                <td>
-                    <label>Ghi chú
-                        <input type="note" name="note" placeholder="Ghi chú...">
-                    </label>
-                </td>
-                <td>
-                    <label>
-                        <input type="submit" value="Đặt xe">
-                    </label>
-                </td>
-
-
-                <td colspan="3">Google Map</td>
-
-        </table>
+            </div>
+        </div>
     </form>
+    <div>
+        Google Map
+    </div>
 </div>
-
-
 </body>
 
 </html>
