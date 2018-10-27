@@ -1,0 +1,60 @@
+{
+  "categories": [
+    {
+      "name": "Books",
+      "iat": 1538978440
+    },
+    {
+      "name": "Laptop",
+      "iat": 1538978440
+    },
+    {
+      "name": "Phone",
+      "iat": 1538978440
+    },
+    {
+      "name": "Fashion",
+      "iat": 1538978440
+    },
+    {
+      "name": "Backpack",
+      "iat": 1538978440
+    },
+    {
+      "name": "Jewels",
+      "iat": 1538978440
+    },
+    {
+      "name": "Camera",
+      "iat": 1539060842
+    },
+    {
+      "name": "Monitor",
+      "iat": 1539060864
+    },
+    {
+      "name": "USB",
+      "iat": 1539316809
+    },
+    {
+      "name": "Remote",
+      "iat": 1539317421
+    },
+    {
+      "name": "Water",
+      "iat": 1539317439
+    },
+    {
+      "name": "Water1",
+      "iat": 1539317591
+    },
+    {
+      "name": "Rice",
+      "iat": 1539318403
+    },
+    {
+      "name": "Ipad",
+      "iat": 1539318434
+    }
+  ]
+}
