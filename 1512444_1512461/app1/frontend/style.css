@@ -20,7 +20,7 @@ table {
     justify-content: center;
     align-items: center;
 }
-.cap {
+div.cap {
     font-size: 50px;
     font-weight: bold;
     text-align: center;
