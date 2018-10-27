@@ -1,0 +1,94 @@
+body {
+    padding: 50px;
+    background-color: #f7f7f7;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+form {
+    width: 100%;
+    height: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+div.form {
+    align-content: center;
+    width: 100%;
+}
+
+table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cap {
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+}
+tr {
+    height: 50px;
+    border: 1px solid #ccc;;
+}
+
+td {
+    padding: 10px;
+}
+label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+input[type=text] {
+    font-size: 14px;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type=note] {
+    font-size: 14px;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #0889ea;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #0860ab;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+#error {
+    color: red;
+    font-size: 28px;
+    margin: 0;
+    padding: 0;
+}
+
+.error {
+    background-color: red;
+    opacity: 0.4;
+}
+
