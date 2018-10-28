@@ -13,8 +13,10 @@ exports.addUser = userEntity =>{
     //     Phone: '3456...'
     // }
 
-    var md5_pwd = md5(userEntity.Password);
-    var sql = `insert into users(f_Username, f_Password, f_Name, f_Email, f_DOB, f_Permission, f_Phone) values('${userEntity.Username}', '${md5_pwd}', '${userEntity.Name}', '${userEntity.Email}', '${userEntity.DOB}', '${userEntity.Permission}','${userEntity.Phone}')`;
+    var md5_pwd = md5(userEntity.password);
+    var sql = `insert into users(username, password, name, email, DOB, permission, phone) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}')`;
+
+    return db.sqlcommon(sql);
 };
 
 // exports.loadAll = () =>{

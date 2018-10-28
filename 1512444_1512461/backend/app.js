@@ -9,6 +9,8 @@ var express = require('express'),
 var requestReiverApiCtrl = require('./ApiController/requestReceiverApiController');
 var userControllers = require('./ApiController/userControllers');
 
+var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
+
 var app = express();
 
 app.use(morgan('dev'));

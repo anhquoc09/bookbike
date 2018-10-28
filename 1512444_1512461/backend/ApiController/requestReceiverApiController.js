@@ -3,8 +3,8 @@ var express = require('express'),
     low = require('lowdb'),
     fileSync = require('lowdb/adapters/FileSync');
 
-var adapter = new fileSync('./db/db.json');
-var db = low(adapter);
+// var adapter = new fileSync('./db/db.json');
+// var db = low(adapter);
 
 var router = express.Router();
 

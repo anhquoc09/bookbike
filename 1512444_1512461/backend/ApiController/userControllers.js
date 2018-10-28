@@ -4,7 +4,7 @@ var userRepo = require('../repos/userRepo');
 var router = express.Router();
 
 //add user
-router.get('/',(req,res)=>{
+router.post('/',(req,res)=>{
     // userRepo.loadAll()
     //     .then(rows => {
     //         res.json(rows);
