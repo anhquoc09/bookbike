@@ -21,7 +21,9 @@ exports.generateAccessToken = userEntity => {
 };
 
 exports.verifyAccessToken = (req, res, next) => {
-    var token = req.header['x-access-token'];
+    var bearerHeader = req.headers['authorization'];
+    var bearer = bearerHeader.split(' ');
+    var token = bearer[1];
     console.log(token);
 
     if (token) {
@@ -54,6 +56,8 @@ exports.updateRefreshToken = (userId, rfToken)=>{
     return new Promise((resolve, reject) => {
         var sql = `UPDATE users SET rfToken = '${rfToken}' where iduser = '${userId}'`;
 
-        return db.sqlcommon(sql);
+        db.sqlcommon(sql)
+            .then(value=> resolve(value))
+            .catch(err => reject(err));
     })
 };

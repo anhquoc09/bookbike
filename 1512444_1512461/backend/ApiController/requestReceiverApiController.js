@@ -18,7 +18,7 @@ router.post('/',(req,res)=>{
         name,
         phone,
         address,
-        note,
+        note
     })
 });
 

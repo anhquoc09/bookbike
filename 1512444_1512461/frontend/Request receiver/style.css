@@ -16,10 +16,6 @@ form {
     margin-right: auto;
     margin-left: auto;
 }
-div {
-    background-color: #f7f7f7;
-    border-radius: 10px;
-}
 label {
     width:100%;
     font-size: 18px;
@@ -60,5 +56,10 @@ input,textarea {
 .error {
     background-color: red;
     opacity: 0.4;
+}
+#map {
+    width: 100%;
+    height: 600px;
+    background-color: grey;
 }
 

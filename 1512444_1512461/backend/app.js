@@ -17,7 +17,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/requestReceiver',requestReiverApiCtrl);
+app.use('/requestReceiver',verifyAccessToken, requestReiverApiCtrl);
 app.use('/userController',userControllers);
 
 var PORT = process.env.PORT || 3000;

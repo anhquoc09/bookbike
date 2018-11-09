@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            width: 100%;
+            height: 600px;
+            background-color: grey;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Đặt xe máy</h1>
+    <form>
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Tên
+                    <input type="text" id="name" placeholder="Tên...">
+                </label>
+                <label>Số điện thoại
+                    <input type="text" id="phone" placeholder="Số điện thoại...">
+                </label>
+                <label>Địa chỉ
+                    <input type="text" id="address" placeholder="Địa chỉ...">
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <label>Ghi chú
+                    <textarea id="note" rows="6" placeholder="Ghi chú..."></textarea>
+                </label>
+                <div>
+                    <input id="submit" type="button" value="Đặt xe">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div>
+
+    </div>
+</div>
+
+<div class="embed-responsive embed-responsive-4by3">
+    <div id="map-container" class="embed-responsive-item">
+        <div id="map">
+        </div>
+    </div>
+</div>
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 12
+        });
+        var geocoder = new google.maps.Geocoder();
+
+        document.getElementById('submit').addEventListener('click',function(){
+           geocodeAddress(geocoder,map);
+        });
+    }
+
+    function geocodeAddress(geocoder, resultsMap) {
+        var address = document.getElementById('address').value;
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcXTJ4C5FcX6G6tRmmqyZvQDSIJgZ7_VI&callback=initMap"
+        async defer></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
+<!--AIzaSyAPU6MzgMD9rQVYAY2esmU-_7DE3x7yJ0Y-->
+<!--AIzaSyAdLsJ-_IUT8FO1abQvF4ZLk9RyN8sFx1M-->
