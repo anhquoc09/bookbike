@@ -16,7 +16,7 @@ exports.addUser = userEntity =>{
     var md5_pwd = md5(userEntity.password);
     var sql = `insert into users(username, password, name, email, DOB, permission, phone) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}')`;
 
-    return db.sqlcommon(sql);
+    return db.insert(sql);
 };
 
 exports.login = loginEntity =>{

@@ -8,6 +8,8 @@ var express = require('express'),
 
 var requestReiverApiCtrl = require('./ApiController/requestReceiverApiController');
 var userControllers = require('./ApiController/userControllers');
+var locationIdentifierControllers = require('./ApiController/locationIdentifierControllers');
+var events = require('./event');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
 
@@ -15,10 +17,15 @@ var app = express();
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.use('/requestReceiver',verifyAccessToken, requestReiverApiCtrl);
+app.use('/requestReceiver', requestReiverApiCtrl);
 app.use('/userController',userControllers);
+app.use('/locaIdController',locationIdentifierControllers);
+app.use('/requestAddedEvent',events.subcribeEventAdded);
+app.use('/requestRemoveEvent',events.subcribeEventRemove);
+
 
 var PORT = process.env.PORT || 3000;
 

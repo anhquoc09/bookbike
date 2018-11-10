@@ -27,7 +27,7 @@ exports.load = sql =>{
 };
 
 //add users into database
-exports.sqlcommon = sql => {
+exports.insert = sql => {
 
     return new Promise((resolve, reject) => {
         var cn = createConnection();

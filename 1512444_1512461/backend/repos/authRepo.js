@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken'),
     rndToken = require('rand-token'),
-    moment = require('moment');
+    moment = require('moment'),
+    userRepo = require('../repos/userRepo');
 
 var db = require('../fn/mysql-db');
 
@@ -21,9 +22,7 @@ exports.generateAccessToken = userEntity => {
 };
 
 exports.verifyAccessToken = (req, res, next) => {
-    var bearerHeader = req.headers['authorization'];
-    var bearer = bearerHeader.split(' ');
-    var token = bearer[1];
+    var token = req.headers['token'];
     console.log(token);
 
     if (token) {
@@ -54,10 +53,40 @@ exports.generateRefreshToken = () =>{
 
 exports.updateRefreshToken = (userId, rfToken)=>{
     return new Promise((resolve, reject) => {
-        var sql = `UPDATE users SET rfToken = '${rfToken}' where iduser = '${userId}'`;
+        var sql = `delete from userRefreshTokenExt where iduser=${userId}`;
 
-        db.sqlcommon(sql)
-            .then(value=> resolve(value))
+        db.insert(sql) //delete
+            .then(value=> {
+                var rdt = moment().format('YYYY-MM-DD HH:mm:ss');
+                sql = `insert into userRefreshTokenExt values(${userId},'${rfToken}','${rdt}')`;
+                return db.insert(sql);
+            })
+            .then(value => resolve(value))
             .catch(err => reject(err));
     })
 };
+
+exports.refreshAccessToken = (rfToken) =>{
+    return new Promise((resolve ,reject)=>{
+        var sql = `select * from userRefreshTokenExt where rf_token = '${rfToken}`;
+        db.load(sql)
+            .then(rows=>{
+                if(rows.length > 0){
+                    userRepo.getUserInfo(rows[0].iduser).then(info=>{
+                        var payload = {
+                            user:  info,
+                            info: 'more info'
+                        };
+
+                        var token = jwt.sign(payload,SECRET,{
+                            expiresIn: AC_LIFETIME
+                        });
+
+                        resolve(token);
+                    })
+                }else{
+                    reject();
+                }
+            })
+    })
+}
