@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Location Identifier</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+</head>
+<body>
+<div class="bg-img">
+    <div class="container" id="app2">
+        <!-- Đăng nhập cho driver -->
+        <div id="login" v-if="loginVisible">
+            <h2 style="text-align:center">Đăng nhập tài khoản</h2>
+            <div class="form-group">
+                <label>Tên đăng nhập:</label>
+                <input type="text" class="form-control" placeholder="Nhập tên..." v-model="username">
+            </div>
+            <div class="form-group">
+                <label >Mật khẩu:</label>
+                <input type="text" class="form-control" v-model="password">
+            </div>
+            <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+        </div>
+
+        <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
+        <div class="panel-body" v-if="requestVisible">
+            <span> </span>
+            <div class="table-responsive">
+                <table class="table" id="tableOrder">
+                    <thead>
+                    <tr>
+                        <th><a>Mã chuyến</a></th>
+                        <th><a>Tên khách hàng</a></th>
+                        <th><a>Số điện thoại</a></th>
+                        <th><a>Địa chỉ nhận</a></th>
+                        <th><a>Ghi chú</a></th>
+                        <th><a>Ngày đặt</a></th>
+                        <th><a>Trạng Thái</a></th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="c in requests">
+                        <td>{{c.id_request}}</td>
+                        <td>{{c.name}}</td>
+                        <td>{{c.phone}}</td>
+                        <td>{{c.address}}</td>
+                        <td>{{c.note}}</td>
+                        <td>{{c.time}}</td>
+                        <td style="color: red">Chưa xác nhận vị trí</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
+<script src="index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#tableOrder').DataTable();
+    });
+</script>
+</body>
+</html>
