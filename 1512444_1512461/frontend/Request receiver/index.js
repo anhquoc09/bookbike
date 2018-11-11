@@ -1,6 +1,5 @@
 $(document).ready(function(){
     $("#submit").click(function(){
-        console.log($('#name').val());
         var data = {};
         data.name= $('#name').val();
         data.phone= $('#phone').val();
@@ -13,7 +12,7 @@ $(document).ready(function(){
             data: JSON.stringify(data),
             timeout: 10000
         }).done(function(data) {
-            console.log(data);
+            alert("Đang tìm tài xế cho bạn vui lòng chờ điện thoại !!!");
         })
     })
 });

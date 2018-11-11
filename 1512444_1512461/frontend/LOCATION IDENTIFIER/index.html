@@ -5,6 +5,9 @@
     <title>Location Identifier</title>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <!-- Add this to <head> -->
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 </head>
 <body>
 <div class="bg-img">
@@ -24,38 +27,32 @@
         </div>
 
         <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
-        <div class="panel-body" v-if="requestVisible">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
+        </div>
+        <div class="panel-body">
             <span> </span>
-            <div class="table-responsive">
-                <table class="table" id="tableOrder">
+            <div class="table-responsive" v-if="requestVisible">
+                <table class="table"  data-page-length='3'  id="tableOrder">
                     <thead>
                     <tr>
-                        <th><a>Mã chuyến</a></th>
                         <th><a>Tên khách hàng</a></th>
-                        <th><a>Số điện thoại</a></th>
                         <th><a>Địa chỉ nhận</a></th>
-                        <th><a>Ghi chú</a></th>
-                        <th><a>Ngày đặt</a></th>
-                        <th><a>Trạng Thái</a></th>
-
-
+                        <th><a>Thời gian đặt</a></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="c in requests">
-                        <td>{{c.id_request}}</td>
                         <td>{{c.name}}</td>
-                        <td>{{c.phone}}</td>
                         <td>{{c.address}}</td>
-                        <td>{{c.note}}</td>
                         <td>{{c.time}}</td>
-                        <td style="color: red">Chưa xác nhận vị trí</td>
                     </tr>
                     </tbody>
                 </table>
-
             </div>
+            <button class="btn btn-success" type="button" @click="editGeocoder">Định vị</button>
         </div>
+
     </div>
 </div>
 
@@ -73,10 +70,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
 <script src="index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- Add this after vue.js -->
+<script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 <script>
     $(document).ready(function(){
-        $('#tableOrder').DataTable();
+        $('#tableOrder').DataTable(
+            // "autoWidth": false,
+            // "lengthChange": true,
+            // "pageLength": 25
+            );
     });
+
 </script>
 </body>
 </html>
