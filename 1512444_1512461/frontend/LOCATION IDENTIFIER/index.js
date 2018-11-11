@@ -7,6 +7,11 @@ var vm = new Vue({
     data: {
         username: "",
         password: "",
+        repassword: "",
+        fullname: "",
+        email: "",
+        phone: "",
+        dob: "",
         requests: [],
         acToken: "",
         rfToken: "",
@@ -15,29 +20,94 @@ var vm = new Vue({
         msg: "",
         err: "",
         loginVisible: true,
+        registVisible: false,
         requestVisible: false,
-        numDeltas : 100,
+        numDeltas: 100,
         tranLat: 0,
         tranLng: 0,
         index: 0
-
     },
     methods: {
         login: function () {
             var self = this;
-            axios.post('http://localhost:3000/userController/login', {
-                username: self.username,
-                password: self.password
-            }).then(response => {
-                self.requestVisible = true;
+            if (self.loginVisible) {
+                axios.post('http://localhost:3000/userController/login', {
+                    username: self.username,
+                    password: self.password
+                }).then(response => {
+                    self.requestVisible = true;
+                    self.loginVisible = false;
+                    self.acToken = response.data.access_token;
+                    self.rfToken = response.data.refresh_token
+                }).catch(err => {
+                    alert(err);
+                }).then(() => {
+                    self.getAllRequest();
+                })
+            } else {
+                self.loginVisible = true;
+                self.registVisible = false;
+            }
+        },
+        regist: function () {
+            var self = this;
+            if (self.registVisible) {
+                if (self.checkRegist()) {
+                    axios.post('http://localhost:3000/userController/', {
+                        username: self.username,
+                        password: self.password,
+                        name: self.fullname,
+                        email: self.email,
+                        phone: self.phone,
+                        permission: 0,
+                        DOB: self.dob,
+                    }).then(response => {
+                        self.loginVisible = true;
+                        self.registVisible = false;
+                    }).catch(err => {
+                        alert(err);
+                    })
+                }
+            } else {
+                self.username = "";
+                self.password = "";
+                self.registVisible = true;
                 self.loginVisible = false;
-                self.acToken = response.data.access_token;
-                self.rfToken = response.data.refresh_token
-            }).catch(err => {
-                alert(err);
-            }).then(() => {
-                self.getAllRequest();
-            })
+            }
+
+        },
+
+        checkRegist: function () {
+            var self = this;
+            if (self.repassword != self.password) {
+                alert("Mật khẩu không trùng khớp");
+                return false;
+            }
+            if(self.username == "") {
+                alert("Không được bỏ trống tên đăng nhập");
+                return false;
+            }
+            if (self.password == "") {
+                alert("Không được bỏ trống mật khẩu");
+                return false;
+            }
+            if (self.fullname == "") {
+                alert("Không được bỏ trống họ và tên");
+                return false;
+            }
+            if (self.email == "") {
+                alert("Không được bỏ trống email");
+                return false;
+            }
+            if (self.phone == "") {
+                alert("Không được bỏ trống số điện thoại");
+                return false;
+            }
+            if (self.dob) {
+                alert("Không được bỏ trống ngày sinh");
+                return false;
+            }
+            return true;
         },
 
         getAllRequest: function () {
@@ -81,56 +151,56 @@ var vm = new Vue({
             })
         },
 
-        setupSSE : function() {
+        setupSSE: function () {
             var self = this;
-            if(typeof(EventSource) === 'undefined'){
+            if (typeof(EventSource) === 'undefined') {
                 console.log('not support');
                 return;
             }
 
             var add = new EventSource('http://localhost:3000/requestAddedEvent');
 
-            add.onerror = function(e){
+            add.onerror = function (e) {
                 console.log('error : ' + e);
             };
 
-            add.addEventListener('EVENT_ADDED',function(e){
+            add.addEventListener('EVENT_ADDED', function (e) {
                 var data = JSON.parse(e.data);
                 console.log(data);
                 self.requests.push(data);
                 self.rfTable();
-                $('#tableOrder tbody').on('click','tr',function(){
-                    if($(this).hasClass('selected')){
+                $('#tableOrder tbody').on('click', 'tr', function () {
+                    if ($(this).hasClass('selected')) {
                         $(this).removeClass('selected');
-                    }else {
+                    } else {
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                     }
                 });
-            },false);
+            }, false);
 
             var remove = new EventSource('http://localhost:3000/requestRemoveEvent');
-            remove.onerror = function(e){
+            remove.onerror = function (e) {
                 console.log(e);
             };
 
-            remove.addEventListener('EVENT_REMOVE',function(e){
+            remove.addEventListener('EVENT_REMOVE', function (e) {
                 var data = JSON.parse(e.data);
                 console.log(data);
                 self.getAllRequest();
-            },false);
+            }, false);
         },
 
-        rfTable: function(){
-            new Promise(function(resolve,reject) {
+        rfTable: function () {
+            new Promise(function (resolve, reject) {
                 $('#tableOrder').DataTable().destroy();
                 resolve();
-            }).then(function(){
+            }).then(function () {
                 var table = $('#tableOrder').DataTable();
-                $('#tableOrder tbody').on('click','tr',function(){
-                    if($(this).hasClass('selected')){
+                $('#tableOrder tbody').on('click', 'tr', function () {
+                    if ($(this).hasClass('selected')) {
                         $(this).removeClass('selected');
-                    }else{
+                    } else {
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                     }
@@ -142,43 +212,43 @@ var vm = new Vue({
             var self = this;
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({'address': self.address}, function (result, status) {
-                if(status == google.maps.Geostatus.OK){
+                if (status == google.maps.Geostatus.OK) {
                     self.geocoder.lat = result[0].geometry.location.lat();
                     self.geocoder.lng = result[0].geometry.location.lng();
                     var myOptions = {
                         zoom: 16,
                         center: self.geocoder,
-                        mapTypeId:  google.maps.MapTypeId.ROADMAP
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
 
-                    var map = new google.maps.Map(document.getElementById('map'),myOptions);
+                    var map = new google.maps.Map(document.getElementById('map'), myOptions);
                     marker = new google.maps.Marker({
                         position: self.geocoder,
                         map: map,
                         title: "Lat :" + geocoder.lat + " | Lng :" + geocoder.lng
                     });
 
-                    google.maps.event.addListener(map,'click',function(event){
-                        var result = [event.latLng.lat(),event.latLng.lng()];
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        var result = [event.latLng.lat(), event.latLng.lng()];
                         self.transition(result);
                     })
-                }else{
+                } else {
                     alert("Địa chỉ không được tìm thấy !!! ");
                     var myOptions = {
-                        zoom : 16,
+                        zoom: 16,
                         center: self.geocoder,
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
 
-                    var map = new google.maps.Map(document.getElementById('map'),myOptions);
+                    var map = new google.maps.Map(document.getElementById('map'), myOptions);
                     marker = new google.maps.Marker({
                         position: self.geocoder,
                         map: map,
                         title: "Lat: " + geocoder.lat + " | Lng: " + geocoder.lng
                     });
 
-                    google.maps.event.addListener(map,'click',function(event){
-                        var result  = [event.latLng.lat(),event.latLng.lng()];
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        var result = [event.latLng.lat(), event.latLng.lng()];
                         self.transaction(result);
                     })
                 }
@@ -186,38 +256,38 @@ var vm = new Vue({
 
         },
 
-        transaction: function(result){
+        transaction: function (result) {
             var self = this;
             self.i = 0;
-            self.tranLat = (result[0] - self.geocoder.lat)/self.numDeltas;
-            self.tranLng = (result[0] - self.geocoder.lng)/self.numDeltas;
+            self.tranLat = (result[0] - self.geocoder.lat) / self.numDeltas;
+            self.tranLng = (result[0] - self.geocoder.lng) / self.numDeltas;
             self.moveMarker();
         },
 
-        moveMarker: function(){
-            var self=this;
-            self.msg="";
-            self.err="";
+        moveMarker: function () {
+            var self = this;
+            self.msg = "";
+            self.err = "";
             self.geocoder.lat += self.tranLat;
             self.geocoder.lng += self.tranLng;
 
-            var latLng = new google.maps.LatLng(self.geocoder.lat,self.geocoder.lng);
-            marker.setTitle("Lat: " + + " | Lnd: " + self.geocoder.lng);
-            if(self.i!=self.numDeltas){
-                self.i ++ ;
+            var latLng = new google.maps.LatLng(self.geocoder.lat, self.geocoder.lng);
+            marker.setTitle("Lat: " + +" | Lnd: " + self.geocoder.lng);
+            if (self.i != self.numDeltas) {
+                self.i++;
                 setTimeout(self.moveMarker(), 100);
             }
         },
 
-        editGeocoder: function(){
-            if ($('#tableOrder').DataTable().row('.selected').data()===undefined){
+        editGeocoder: function () {
+            if ($('#tableOrder').DataTable().row('.selected').data() === undefined) {
                 return
-            }else {
+            } else {
                 console.log($('#tableOrder').DataTable().row('.selected').data())
             }
         },
 
-        updateGeocoder: function(){
+        updateGeocoder: function () {
 
         }
 

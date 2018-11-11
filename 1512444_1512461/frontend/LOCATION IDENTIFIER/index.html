@@ -8,49 +8,98 @@
     <!-- Add this to <head> -->
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="bg-img">
     <div class="container" id="app2">
         <!-- Đăng nhập cho driver -->
         <div id="login" v-if="loginVisible">
-            <h2 style="text-align:center">Đăng nhập tài khoản</h2>
+            <h3>Đăng nhập</h3>
             <div class="form-group">
                 <label>Tên đăng nhập:</label>
-                <input type="text" class="form-control" placeholder="Nhập tên..." v-model="username">
+                <input type="text" id="username" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
             </div>
             <div class="form-group">
-                <label >Mật khẩu:</label>
-                <input type="text" class="form-control" v-model="password">
+                <label>Mật khẩu:</label>
+                <input type="password" id="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
             </div>
-            <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+                <button type="button" class="btn btn-success" @click="regist">Đăng ký mới</button>
+            </div>
+        </div>
+        <!-- Đăng ký cho driver -->
+        <div id="regist" v-if="registVisible">
+            <h3>Đăng ký</h3>
+            <div class="form-group">
+                <label>Tên đăng nhập:</label>
+                <input type="text" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu:</label>
+                <input type="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
+            </div>
+            <div class="form-group">
+                <label>Nhập lại mật khẩu:</label>
+                <input type="password" class="form-control" placeholder="Nhập lại mật khẩu..." v-model="repassword">
+            </div>
+            <div class="form-group">
+                <label>Họ và tên:</label>
+                <input type="text" class="form-control" placeholder="Họ và tên..." v-model="fullname">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" class="form-control" placeholder="abc@expamle.com..." v-model="email">
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại:</label>
+                <input type="number" class="form-control" placeholder="0123456789..." v-model="phone">
+            </div>
+            <div class="form-group">
+                <label>Ngày sinh:</label>
+                <input type="date" class="form-control" placeholder="dd/mm/yyyy..." v-model="dob">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+                <button type="button" class="btn btn-success" @click="regist">Hoàn tất đăng ký</button>
+            </div>
         </div>
 
         <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
-        <div class="panel-heading">
-            <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
-        </div>
-        <div class="panel-body">
-            <span> </span>
-            <div class="table-responsive" v-if="requestVisible">
-                <table class="table"  data-page-length='3'  id="tableOrder">
-                    <thead>
-                    <tr>
-                        <th><a>Tên khách hàng</a></th>
-                        <th><a>Địa chỉ nhận</a></th>
-                        <th><a>Thời gian đặt</a></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="c in requests">
-                        <td>{{c.name}}</td>
-                        <td>{{c.address}}</td>
-                        <td>{{c.time}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <div id="panel" v-if="requestVisible">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
             </div>
-            <button class="btn btn-success" type="button" @click="editGeocoder">Định vị</button>
+            <div class="panel-body">
+                <div class="table-responsive" v-if="requestVisible">
+                    <table class="table" data-page-length='10' id="tableOrder">
+                        <thead>
+                        <tr>
+                            <th><a>STT</a></th>
+                            <th><a>Tên khách hàng</a></th>
+                            <th><a>Địa chỉ nhận</a></th>
+                            <th><a>Số điện thoại</a></th>
+                            <th><a>Ghi chú</a></th>
+                            <th><a>Trạng thái</a></th>
+                            <th><a>Thời gian đặt</a></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="c in requests">
+                            <td>{{c.id_request}}</td>
+                            <td>{{c.name}}</td>
+                            <td>{{c.address}}</td>
+                            <td>{{c.phone}}</td>
+                            <td>{{c.note}}</td>
+                            <td>{{c.status}}</td>
+                            <td>{{c.time}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-success" type="button" @click="editGeocoder">Định vị</button>
+            </div>
         </div>
 
     </div>
@@ -74,12 +123,12 @@
 <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
 <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('#tableOrder').DataTable(
             // "autoWidth": false,
             // "lengthChange": true,
             // "pageLength": 25
-            );
+        );
     });
 
 </script>
