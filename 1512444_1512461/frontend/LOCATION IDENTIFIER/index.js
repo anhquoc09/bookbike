@@ -1,5 +1,6 @@
 window.onload = function () {
     vm.setupSSE();
+    // vm.initMap();
 };
 
 var vm = new Vue({
@@ -22,6 +23,7 @@ var vm = new Vue({
         loginVisible: true,
         registVisible: false,
         requestVisible: false,
+        mapVisible: false,
         numDeltas: 100,
         tranLat: 0,
         tranLng: 0,
@@ -37,6 +39,8 @@ var vm = new Vue({
                 }).then(response => {
                     self.requestVisible = true;
                     self.loginVisible = false;
+                    self.registVisible = false;
+                    self.mapVisible = false;
                     self.acToken = response.data.access_token;
                     self.rfToken = response.data.refresh_token
                 }).catch(err => {
@@ -47,6 +51,8 @@ var vm = new Vue({
             } else {
                 self.loginVisible = true;
                 self.registVisible = false;
+                self.requestsVisible = false;
+                self.mapVisible = false;
             }
         },
         regist: function () {
@@ -173,7 +179,7 @@ var vm = new Vue({
                     if ($(this).hasClass('selected')) {
                         $(this).removeClass('selected');
                     } else {
-                        table.$('tr.selected').removeClass('selected');
+                        $('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                     }
                 });
@@ -279,11 +285,27 @@ var vm = new Vue({
             }
         },
 
-        editGeocoder: function () {
+        getGeocoder: function () {
             if ($('#tableOrder').DataTable().row('.selected').data() === undefined) {
                 return
             } else {
                 console.log($('#tableOrder').DataTable().row('.selected').data())
+                var self = this;
+                self.idEdit = parseInt($('#tableOrder').DataTable().row('.selected').data()[0]);
+                self.mapVisible = true;
+                new Promise(function (resolve, reject) {
+
+                    var i;
+                    for (i = 0; i < self.requests.length; i++) {
+                        if (self.requests[i].id_request === parseInt($('#tableOrder').DataTable().row('.selected').data()[0])) {
+                            self.address = self.requests[i].address;
+
+                            resolve();
+                        }
+                    }
+                }).then(function () {
+                    self.initMap();
+                })
             }
         },
 

@@ -12,6 +12,7 @@ $(document).ready(function(){
             data: JSON.stringify(data),
             timeout: 10000
         }).done(function(data) {
+            // console.log(data);
             alert("Đang tìm tài xế cho bạn vui lòng chờ điện thoại !!!");
         })
     })

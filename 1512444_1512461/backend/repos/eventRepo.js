@@ -5,7 +5,7 @@ exports.loadAll = () => {
     return db.load(sql);
 };
 exports.loadAllRequestApp1=()=>{
-    var sql = `select id_reqest,name,phone,address,note,status ,DATE_FORMAT(time, "%d/%m/%Y %H:%i:%s")AS time from request where status='${1}'`;
+    var sql = `select id_request,name,phone,address,note,status ,DATE_FORMAT(time, "%d/%m/%Y %H:%i:%s")AS time from request where status='${1}'`;
 
     return db.load(sql);
 };

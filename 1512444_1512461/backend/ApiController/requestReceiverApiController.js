@@ -21,7 +21,7 @@ router.post('/',(req,res)=>{
     };
 
     eventRepo.addEvent(entity).then((value)=>{
-        entity.id_request = value.id_request;
+        entity.id_request = value.insertId;
         event.publishEventAdded(entity);
     }).catch(err => {
         console.log(err);

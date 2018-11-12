@@ -6,7 +6,8 @@ var router = express.Router();
 
 //add user
 router.post('/',(req,res)=>{
-
+    //load het user
+    //lay username so sanhs trung thif loai
     userRepo.addUser(req.body)
         .then(value=>{
             console.log(value);
@@ -27,6 +28,7 @@ router.post('/login',(req,res)=>{
     // 	user: 'nndkhoa',
     // 	pwd: 'nndkhoa'
     // }
+
 
     userRepo.login(req.body)
         .then(rows => {
