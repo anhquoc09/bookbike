@@ -28,10 +28,9 @@ router.post('/login',(req,res)=>{
     // 	user: 'nndkhoa',
     // 	pwd: 'nndkhoa'
     // }
-
-
     userRepo.login(req.body)
         .then(rows => {
+            console.log(rows);
             if(rows.length > 0){
                 console.log(rows[0]);   
                 var userEntity = rows[0];

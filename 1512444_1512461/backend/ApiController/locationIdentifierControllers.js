@@ -21,7 +21,7 @@ router.get('/getAll',(req,res)=>{
 
 router.get('/getRequestReceiver',(req,res)=>{
 
-    requestRepo.loadAll()
+    requestRepo.loadReceiverNotStatus()
         .then(rows=>{
             res.json(rows);
         }).catch(err=>{
@@ -29,6 +29,19 @@ router.get('/getRequestReceiver',(req,res)=>{
             res.end('View error log on console');
     })
 
+});
+
+router.post('/receiveRequest', (req, res) => {
+    console.log(req.body);
+    requestRepo.receiveRequest(req.body.idUser, req.body.id_request)
+        .then(value => {
+            res.json(value);
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console');
+        });
 });
 
 module.exports = router;

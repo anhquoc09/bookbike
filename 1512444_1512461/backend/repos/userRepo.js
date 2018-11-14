@@ -20,8 +20,8 @@ exports.addUser = userEntity =>{
 };
 
 exports.login = loginEntity =>{
-    var md5_pwd = md5(loginEntity.pwd);
-    var sql = `SELECT * FROM users WHERE username = '${loginEntity.user}' and password = '${md5_pwd}'`;
+    var md5_pwd = md5(loginEntity.password);
+    var sql = `SELECT * FROM users WHERE username = '${loginEntity.username}' and password = '${md5_pwd}'`;
     console.log(db.load(sql));
     return db.load(sql);
 };

@@ -1,119 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8">
     <title>Location Identifier</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <div class="container" id="app2">
-        <!-- Đăng nhập cho driver -->
-        <div id="login" v-if="loginVisible">
-            <h3>Đăng nhập</h3>
-            <div class="form-group">
-                <label>Tên đăng nhập:</label>
-                <input type="text" id="username" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu:</label>
-                <input type="password" id="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
-                <button type="button" class="btn btn-success" @click="regist">Đăng ký mới</button>
+<div class="container" id="app2">
+    <!-- Đăng nhập cho driver -->
+    <div id="login" v-if="loginVisible">
+        <h3>Đăng nhập</h3>
+        <div class="form-group">
+            <label>Tên đăng nhập:</label>
+            <input type="text" id="username" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
+        </div>
+        <div class="form-group">
+            <label>Mật khẩu:</label>
+            <input type="password" id="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+            <button type="button" class="btn btn-success" @click="regist">Đăng ký mới</button>
+        </div>
+    </div>
+    <!-- Đăng ký cho driver -->
+    <div id="regist" v-if="registVisible">
+        <h3>Đăng ký</h3>
+        <div class="form-group">
+            <label>Tên đăng nhập:</label>
+            <input type="text" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
+        </div>
+        <div class="form-group">
+            <label>Mật khẩu:</label>
+            <input type="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
+        </div>
+        <div class="form-group">
+            <label>Nhập lại mật khẩu:</label>
+            <input type="password" class="form-control" placeholder="Nhập lại mật khẩu..." v-model="repassword">
+        </div>
+        <div class="form-group">
+            <label>Họ và tên:</label>
+            <input type="text" class="form-control" placeholder="Họ và tên..." v-model="fullname">
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" placeholder="abc@expamle.com..." v-model="email">
+        </div>
+        <div class="form-group">
+            <label>Số điện thoại:</label>
+            <input type="number" class="form-control" placeholder="0123456789..." v-model="phone">
+        </div>
+        <div class="form-group">
+            <label>Ngày sinh:</label>
+            <input type="date" class="form-control" placeholder="dd/mm/yyyy..." v-model="dob">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+            <button type="button" class="btn btn-success" @click="regist">Hoàn tất đăng ký</button>
+        </div>
+    </div>
+    <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
+    <div id="panel" v-if="requestVisible">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
+        </div>
+        <div class="panel-body">
+            <span></span>
+            <div class="table-responsive" >
+                <table class="table" id="tableOrder" data-page-length='3'>
+                    <thead>
+                    <tr>
+                        <th><a>STT</a></th>
+                        <th><a>Tên khách hàng</a></th>
+                        <th><a>Địa chỉ nhận</a></th>
+                        <th><a>Số điện thoại</a></th>
+                        <th><a>Ghi chú</a></th>
+                        <th><a>Trạng thái</a></th>
+                        <th><a>Thời gian đặt</a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="c in requests">
+                        <td>{{c.id_request}}</td>
+                        <td>{{c.name}}</td>
+                        <td>{{c.address}}</td>
+                        <td>{{c.phone}}</td>
+                        <td>{{c.note}}</td>
+                        <td>{{c.status}}</td>
+                        <td>{{c.time}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <!-- Đăng ký cho driver -->
-        <div id="regist" v-if="registVisible">
-            <h3>Đăng ký</h3>
-            <div class="form-group">
-                <label>Tên đăng nhập:</label>
-                <input type="text" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu:</label>
-                <input type="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
-            </div>
-            <div class="form-group">
-                <label>Nhập lại mật khẩu:</label>
-                <input type="password" class="form-control" placeholder="Nhập lại mật khẩu..." v-model="repassword">
-            </div>
-            <div class="form-group">
-                <label>Họ và tên:</label>
-                <input type="text" class="form-control" placeholder="Họ và tên..." v-model="fullname">
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" class="form-control" placeholder="abc@expamle.com..." v-model="email">
-            </div>
-            <div class="form-group">
-                <label>Số điện thoại:</label>
-                <input type="number" class="form-control" placeholder="0123456789..." v-model="phone">
-            </div>
-            <div class="form-group">
-                <label>Ngày sinh:</label>
-                <input type="date" class="form-control" placeholder="dd/mm/yyyy..." v-model="dob">
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
-                <button type="button" class="btn btn-success" @click="regist">Hoàn tất đăng ký</button>
-            </div>
-        </div>
-        <!--class="panel-body"-->
-        <!--data-page-length='10'-->
-        <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
-        <div id="panel" v-if="requestVisible">
-            <div class="panel-heading">
-                <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
-            </div>
-            <div class="panel-body">
-                <span></span>
-                <div class="table-responsive" >
-                    <table class="table" id="tableOrder" data-page-length='3'>
-                        <thead>
-                        <tr>
-                            <th><a>STT</a></th>
-                            <th><a>Tên khách hàng</a></th>
-                            <th><a>Địa chỉ nhận</a></th>
-                            <th><a>Số điện thoại</a></th>
-                            <th><a>Ghi chú</a></th>
-                            <th><a>Trạng thái</a></th>
-                            <th><a>Thời gian đặt</a></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="c in requests">
-                            <td>{{c.id_request}}</td>
-                            <td>{{c.name}}</td>
-                            <td>{{c.address}}</td>
-                            <td>{{c.phone}}</td>
-                            <td>{{c.note}}</td>
-                            <td>{{c.status}}</td>
-                            <td>{{c.time}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-                <button class="btn btn-success" type="button" @click="getGeocoder">Định vị</button>
-        </div>
-
-        <div id="Gmap" v-if="mapVisible">
-            <div>Địa chỉ: {{address}}</div>
-            <div style="color: green">{{msg}}</div>
-            <div style="color: red">{{err}}</div>
-            <div id="map"></div>
-            <button class="btn btn-success" type="button" @click="getGeocoder">Cập nhật vị trí</button>
-            <!--<button class="btn btn-success" type="button" @click="closeMap">Đóng</button>-->
-        </div>
+        <button class="btn btn-success" type="button" @click="getGeocoder">Định vị</button>
+    </div>
+    <br>
+    <div id="eventBtn" v-if="mapVisible">
+        <button class="btn btn-success" type="button" @click="receiveRequest">Nhận cuốc</button>
+        <button class="btn btn-success" type="button" @click="closeMap">Đóng</button>
     </div>
 
 </div>
+<div id="map"></div>
 
+<!--<div v-if="mapVisible" id="map"></div>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -122,18 +137,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
-<script src="index.js"></script>
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tableOrder').DataTable();
-    });
-</script>
-<!--<script async defer-->
-<!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4qFj8fv3AYqhSvBiSvCkPWB89NhfSOvY&callback=initMap">-->
-<!--</script>-->
-<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false&key=AIzaSyBl4QyHMxlZar0aVUVaJmEbqYV8TioCQLM&callback=initMap"
+        async defer></script>
+<script src="index.js"></script>
 </body>
 </html>

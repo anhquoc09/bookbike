@@ -1,11 +1,11 @@
 window.onload = function () {
     vm.setupSSE();
-    // vm.initMap();
+    vm.initMap();
 };
-
 var vm = new Vue({
     el: '#app2',
     data: {
+        iduser: "",
         username: "",
         password: "",
         repassword: "",
@@ -18,6 +18,7 @@ var vm = new Vue({
         rfToken: "",
         geocoder: {lat: 10.7623314, lng: 106.6820053},
         address: "",
+        idUpdate: 0,
         msg: "",
         err: "",
         loginVisible: true,
@@ -42,7 +43,8 @@ var vm = new Vue({
                     self.registVisible = false;
                     self.mapVisible = false;
                     self.acToken = response.data.access_token;
-                    self.rfToken = response.data.refresh_token
+                    self.rfToken = response.data.refresh_token;
+                    self.iduser = response.data.user.iduser;
                 }).catch(err => {
                     alert(err);
                 }).then(() => {
@@ -55,6 +57,7 @@ var vm = new Vue({
                 self.mapVisible = false;
             }
         },
+
         regist: function () {
             var self = this;
             if (self.registVisible) {
@@ -121,9 +124,7 @@ var vm = new Vue({
             axios.get('http://localhost:3000/locaIdController/getRequestReceiver', {headers: {token: self.acToken}})
                 .then(response => {
                     self.requests = response.data;
-                    console.log(response.data);
-                    console.log(self.rfTable());
-                    // self.rfTable();
+                    self.rfTable();
                 })
                 .catch(err => {
                     if (err.response.status === 401) {
@@ -172,7 +173,6 @@ var vm = new Vue({
 
             add.addEventListener('EVENT_ADDED', function (e) {
                 var data = JSON.parse(e.data);
-                console.log(data);
                 self.requests.push(data);
                 self.rfTable();
                 $('#tableOrder tbody').on('click', 'tr', function () {
@@ -192,7 +192,6 @@ var vm = new Vue({
 
             remove.addEventListener('EVENT_REMOVE', function (e) {
                 var data = JSON.parse(e.data);
-                console.log(data);
                 self.getAllRequest();
             }, false);
         },
@@ -218,7 +217,7 @@ var vm = new Vue({
             var self = this;
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({'address': self.address}, function (result, status) {
-                if (status == google.maps.Geostatus.OK) {
+                if (status == google.maps.GeocoderStatus.OK) {
                     self.geocoder.lat = result[0].geometry.location.lat();
                     self.geocoder.lng = result[0].geometry.location.lng();
                     var myOptions = {
@@ -255,14 +254,14 @@ var vm = new Vue({
 
                     google.maps.event.addListener(map, 'click', function (event) {
                         var result = [event.latLng.lat(), event.latLng.lng()];
-                        self.transaction(result);
+                        self.transition(result);
                     })
                 }
             })
 
         },
 
-        transaction: function (result) {
+        transition: function (result) {
             var self = this;
             self.i = 0;
             self.tranLat = (result[0] - self.geocoder.lat) / self.numDeltas;
@@ -287,14 +286,16 @@ var vm = new Vue({
 
         getGeocoder: function () {
             if ($('#tableOrder').DataTable().row('.selected').data() === undefined) {
-                return
+                alert("Vui lòng chọn chuyến cần nhận !!!");
+                return;
             } else {
                 console.log($('#tableOrder').DataTable().row('.selected').data())
                 var self = this;
-                self.idEdit = parseInt($('#tableOrder').DataTable().row('.selected').data()[0]);
+                self.idUpdate = parseInt($('#tableOrder').DataTable().row('.selected').data()[0]);
+                self.requestVisible = true;
                 self.mapVisible = true;
-                new Promise(function (resolve, reject) {
 
+                new Promise(function (resolve, reject) {
                     var i;
                     for (i = 0; i < self.requests.length; i++) {
                         if (self.requests[i].id_request === parseInt($('#tableOrder').DataTable().row('.selected').data()[0])) {
@@ -309,8 +310,42 @@ var vm = new Vue({
             }
         },
 
-        updateGeocoder: function () {
+        receiveRequest: function () {
+            var self=this;
+            axios.post('http://localhost:3000/locaIdController/receiveRequest', {
+                id_request: self.idUpdate,
+                idUser: self.iduser,
+            },{ headers: { token: self.token } })
+                .then(function (response) {
+                    console.log(response.data);
+                    self.msg="Cập nhật thành công";
+                })
+                .catch(function (error) {
+                    if (error.response.status===401){
+                        new Promise(function (resolve) {
+                            self.refreshToken();
+                            resolve();
+                        }).then(function () {
+                            if (self.mapVisible===true){
+                                self.updateGeocoder();
+                            }
+                        })
+                        return;
+                    }else {
+                        self.err="Không thể cập nhật";
+                    }
+                }).then(function () {
 
+            });
+        },
+
+        closeMap: function(){
+            var self = this;
+            self.mapVisible = false;
+            self.requestsVisible = true;
+            self.getAllRequest();
+            self.msg="";
+            self.err="";
         }
 
     }
