@@ -1,8 +1,6 @@
-/*body {*/
-    /*padding: 50px;*/
-    /*!*background-color: #ffffff;*!*/
-    /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
-/*}*/
+body {
+    margin: auto;
+}
 h3 {
     margin-bottom: 20px;
     font-size: 50px;
@@ -20,13 +18,6 @@ div#login, #regist {
     margin: auto;
 }
 #map {
-    height: 100%;
+    width: 100%;
+    height: 500px;
 }
-
-/* Optional: Makes the sample page fill the window. */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-

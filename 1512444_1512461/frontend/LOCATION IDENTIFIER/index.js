@@ -1,6 +1,5 @@
 window.onload = function () {
     vm.setupSSE();
-    vm.initMap();
 };
 var vm = new Vue({
     el: '#app2',
@@ -45,6 +44,7 @@ var vm = new Vue({
                     self.acToken = response.data.access_token;
                     self.rfToken = response.data.refresh_token;
                     self.iduser = response.data.user.iduser;
+                    vm.initMap();
                 }).catch(err => {
                     alert(err);
                 }).then(() => {
@@ -112,7 +112,7 @@ var vm = new Vue({
                 alert("Không được bỏ trống số điện thoại");
                 return false;
             }
-            if (self.dob) {
+            if (self.dob == "") {
                 alert("Không được bỏ trống ngày sinh");
                 return false;
             }
@@ -201,7 +201,11 @@ var vm = new Vue({
                 $('#tableOrder').DataTable().destroy();
                 resolve();
             }).then(function () {
-                var table = $('#tableOrder').DataTable();
+                var table = $('#tableOrder').DataTable({
+                    "paging": false,
+                    "scrollY": 180,
+                    "info": false
+                });
                 $('#tableOrder tbody').on('click', 'tr', function () {
                     if ($(this).hasClass('selected')) {
                         $(this).removeClass('selected');
@@ -238,7 +242,6 @@ var vm = new Vue({
                         self.transition(result);
                     })
                 } else {
-                    alert("Địa chỉ không được tìm thấy !!! ");
                     var myOptions = {
                         zoom: 16,
                         center: self.geocoder,
@@ -343,10 +346,8 @@ var vm = new Vue({
             var self = this;
             self.mapVisible = false;
             self.requestsVisible = true;
-            self.getAllRequest();
             self.msg="";
             self.err="";
         }
-
     }
 });

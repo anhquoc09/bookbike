@@ -4,26 +4,13 @@
     <title>Location Identifier</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <style>
-        /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
-        #map {
-            height: 100%;
-        }
-
-        /* Optional: Makes the sample page fill the window. */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
 <body>
 <div class="container" id="app2">
@@ -82,12 +69,12 @@
     <!--Sau khi đăng nhập chuyển sang phần hiển thị các request của app1 gửi đến cho driver-->
     <div id="panel" v-if="requestVisible">
         <div class="panel-heading">
-            <h3 class="panel-title" style="text-align:center">Quản lý thông tin đặt xe</h3>
+            <h3 class="panel-title">Quản lý thông tin đặt xe</h3>
         </div>
         <div class="panel-body">
             <span></span>
             <div class="table-responsive" >
-                <table class="table" id="tableOrder" data-page-length='3'>
+                <table class="table display compact" id="tableOrder" data-page-length='3'>
                     <thead>
                     <tr>
                         <th><a>STT</a></th>
@@ -95,7 +82,6 @@
                         <th><a>Địa chỉ nhận</a></th>
                         <th><a>Số điện thoại</a></th>
                         <th><a>Ghi chú</a></th>
-                        <th><a>Trạng thái</a></th>
                         <th><a>Thời gian đặt</a></th>
                     </tr>
                     </thead>
@@ -106,7 +92,6 @@
                         <td>{{c.address}}</td>
                         <td>{{c.phone}}</td>
                         <td>{{c.note}}</td>
-                        <td>{{c.status}}</td>
                         <td>{{c.time}}</td>
                     </tr>
                     </tbody>
@@ -121,8 +106,10 @@
         <button class="btn btn-success" type="button" @click="closeMap">Đóng</button>
     </div>
 
+    <div id="map" v-if="mapVisible"></div>
+
 </div>
-<div id="map"></div>
+
 
 <!--<div v-if="mapVisible" id="map"></div>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
