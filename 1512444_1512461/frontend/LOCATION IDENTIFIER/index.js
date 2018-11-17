@@ -16,7 +16,7 @@ var vm = new Vue({
         acToken: "",
         rfToken: "",
         geocoder: {lat: 10.7623314, lng: 106.6820053},
-        address: "",
+        address: "257 Nguyễn Văn Cừ Quận 5",
         idUpdate: 0,
         msg: "",
         err: "",
@@ -36,7 +36,7 @@ var vm = new Vue({
                 axios.post('http://localhost:3000/userController/login', {
                     username: self.username,
                     password: self.password
-                }).then(response => {
+                }).then(function (response) {
                     self.requestVisible = true;
                     self.loginVisible = false;
                     self.registVisible = false;
@@ -45,11 +45,12 @@ var vm = new Vue({
                     self.rfToken = response.data.refresh_token;
                     self.iduser = response.data.user.iduser;
                     vm.initMap();
-                }).catch(err => {
-                    alert(err);
-                }).then(() => {
                     self.getAllRequest();
-                })
+                }).catch(function (err) {
+                    alert("username và password không đúng !!!");
+                    self.requestVisible = false;
+                    self.login();
+                });
             } else {
                 self.loginVisible = true;
                 self.registVisible = false;
@@ -150,11 +151,12 @@ var vm = new Vue({
                     self.acToken = response.data.access_token;
                 })
                 .catch(err => {
-                    if (err.response.statusCode === 401) {
+                    if (err.response.status === 401) {
                         self.loginVisible = true;
                         self.requestVisible = false;
                     }
-                }).then(function () {
+                })
+                .then(function () {
             })
         },
 
@@ -233,15 +235,19 @@ var vm = new Vue({
                     var map = new google.maps.Map(document.getElementById('map'), myOptions);
                     marker = new google.maps.Marker({
                         position: self.geocoder,
+                        draggable: true,
                         map: map,
                         title: "Lat :" + geocoder.lat + " | Lng :" + geocoder.lng
                     });
+
+                    marker.addListener('click', self.toggleBounce);
 
                     google.maps.event.addListener(map, 'click', function (event) {
                         var result = [event.latLng.lat(), event.latLng.lng()];
                         self.transition(result);
                     })
                 } else {
+                    alert("Địa chỉ không được tìm thấy !!!");
                     var myOptions = {
                         zoom: 16,
                         center: self.geocoder,
@@ -262,6 +268,31 @@ var vm = new Vue({
                 }
             })
 
+        },
+
+        toggleBounce: function () {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        },
+
+        reverseGeocoding: function (marker) {
+            google.maps.event.addListener(marker, 'dragend', function (evt) {
+                geocoder.geocode({'location': evt.latLng}, function (results, status) {
+                    if (status == "OK") {
+                        alert("Avc");
+                        console.log(evt);
+                    } else {
+                        console.log('Geocoder failed due to: ' + status);
+                    }
+                })
+            });
+
+            google.maps.event.addListener(markerobject, 'drag', function (evt) {
+                console.log("marker is being dragged");
+            });
         },
 
         transition: function (result) {

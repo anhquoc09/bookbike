@@ -32,7 +32,47 @@ router.post('/login',(req,res)=>{
         .then(rows => {
             console.log(rows);
             if(rows.length > 0){
-                console.log(rows[0]);   
+                var userEntity = rows[0];
+                var acToken = authRepo.generateAccessToken();
+                var rfToken = authRepo.generateRefreshToken();
+
+                authRepo.updateRefreshToken(userEntity.iduser,rfToken)
+                    .then(value=>{
+                        res.json({
+                            auth: true,
+                            user: userEntity,
+                            access_token : acToken,
+                            refresh_token : rfToken
+                        });
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.statusCode = 500;
+                        res.end("View error log on console ");
+                    })
+            }else{
+                res.json({
+                    auth: false
+                });
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console');
+        })
+});
+
+router.post('/adminlogin',(req,res)=>{
+
+    // req.body = {
+    // 	user: 'nndkhoa',
+    // 	pwd: 'nndkhoa'
+    // }
+    userRepo.adminlogin(req.body)
+        .then(rows => {
+            console.log(rows);
+            if(rows.length > 0){
                 var userEntity = rows[0];
                 var acToken = authRepo.generateAccessToken();
                 var rfToken = authRepo.generateRefreshToken();

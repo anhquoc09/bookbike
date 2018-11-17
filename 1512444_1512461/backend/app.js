@@ -9,6 +9,7 @@ var express = require('express'),
 var requestReiverApiCtrl = require('./ApiController/requestReceiverApiController');
 var userControllers = require('./ApiController/userControllers');
 var locationIdentifierControllers = require('./ApiController/locationIdentifierControllers');
+var requestManagementControllers = require('./ApiController/requestManagementControllers');
 var events = require('./event');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
@@ -22,7 +23,9 @@ app.use(cors());
 
 app.use('/requestReceiver', requestReiverApiCtrl);
 app.use('/userController',userControllers);
-app.use('/locaIdController',locationIdentifierControllers);
+app.use('/locaIdController',verifyAccessToken,locationIdentifierControllers);
+app.use('/requestManagement',requestManagementControllers);
+
 app.use('/requestAddedEvent',events.subcribeEventAdded);
 app.use('/requestRemoveEvent',events.subcribeEventRemove);
 
