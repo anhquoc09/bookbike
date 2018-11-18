@@ -7,8 +7,14 @@ var vm = new Vue({
         requests: [],
         acToken: "",
         rfToken: "",
+        address: "257 Nguyễn Văn Cừ Quận 5",
+        geocoder: {lat: 10.7623314, lng: 106.6820053},
         loginVisible: true,
         bodyVisible: false,
+        index: 0,
+        tranLat: 0,
+        tranLng: 0,
+        numDeltas: 100,
     },
     methods: {
         login: function () {
@@ -134,12 +140,119 @@ var vm = new Vue({
 
             remove.onerror = function (e) {
                 console.log('error : ' + e);
-            }
+            };
 
             remove.addEventListener('EVENT_REMOVE',function(e){
                 var data = JSON.parse(e.data);
                 self.getAllRequest();
             },false);
+        },
+
+        initMap: function () {
+            var self = this;
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address': self.address}, function (result, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    self.geocoder.lat = result[0].geometry.location.lat();
+                    self.geocoder.lng = result[0].geometry.location.lng();
+                    var myOptions = {
+                        zoom: 16,
+                        center: self.geocoder,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+
+                    var map = new google.maps.Map(document.getElementById('map'), myOptions);
+                    marker = new google.maps.Marker({
+                        position: self.geocoder,
+                        draggable: true,
+                        map: map,
+                        title: "Lat :" + geocoder.lat + " | Lng :" + geocoder.lng
+                    });
+
+                    marker.addListener('click', self.toggleBounce);
+
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        var result = [event.latLng.lat(), event.latLng.lng()];
+                        self.transition(result);
+                    })
+                } else {
+                    alert("Địa chỉ không được tìm thấy !!!");
+                    var myOptions = {
+                        zoom: 16,
+                        center: self.geocoder,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+
+                    var map = new google.maps.Map(document.getElementById('map'), myOptions);
+                    marker = new google.maps.Marker({
+                        position: self.geocoder,
+                        map: map,
+                        title: "Lat: " + geocoder.lat + " | Lng: " + geocoder.lng
+                    });
+
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        var result = [event.latLng.lat(), event.latLng.lng()];
+                        self.transition(result);
+                    })
+                }
+            })
+        },
+
+        transition: function (result) {
+            var self = this;
+            self.index = 0;
+            self.tranLat = (result[0] - self.geocoder.lat) / self.numDeltas;
+            self.tranLng = (result[0] - self.geocoder.lng) / self.numDeltas;
+            self.moveMarker();
+        },
+
+        toggleBounce: function () {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        },
+
+        getGeocoder: function () {
+            // if($('#dataTable').DataTable().row('.selected').data() === undefined ){
+            //     alert("Vui lòng chọn chuyến cần xem ");
+            //     return;
+            // }else{
+            //     var self = this;
+            //     // new Promise(function(resolve,reject){
+            //     //     var i;
+            //     //     for (i=0;i<self.requests.length;i++){
+            //     //         if(self.requests[i].id_request === parseInt($('#dataTable').DataTable().row('.selected').data()[0])){
+            //     //             self.address = self.requests[i].address;
+            //     //
+            //     //             resolve('success');
+            //     //         }
+            //     //     }
+            //     // }).then(function(value){
+            //     //     self.initMap();
+            //     //     console.log(value)
+            //     // });
+            //
+            // }
+            if ($('#dataTable').DataTable().row('.selected').data() === undefined) {
+                alert("Vui lòng chọn chuyến cần xem ");
+                return;
+            } else {
+                var self = this;
+                new Promise(function (resolve, reject) {
+                    var i;
+                            for (i=0; i < self.requests.length; i++) {
+                                if (self.requests[i].id_request === parseInt($('#dataTable').DataTable().row('.selected').data()[0])) {
+                                    self.address = self.requests[i].address;
+                                }
+                            }
+                    resolve('success');
+                }).then(function (value) {
+                    console.log(value);
+                    self.initMap();
+                })
+            }
         },
     }
 });

@@ -24,7 +24,7 @@ app.use(cors());
 app.use('/requestReceiver', requestReiverApiCtrl);
 app.use('/userController',userControllers);
 app.use('/locaIdController',verifyAccessToken,locationIdentifierControllers);
-app.use('/requestManagement',requestManagementControllers);
+app.use('/requestManagement',verifyAccessToken,requestManagementControllers);
 
 app.use('/requestAddedEvent',events.subcribeEventAdded);
 app.use('/requestRemoveEvent',events.subcribeEventRemove);

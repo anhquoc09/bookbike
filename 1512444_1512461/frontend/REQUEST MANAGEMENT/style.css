@@ -19,14 +19,14 @@ table, th, td {
     padding-top: 1rem;
 }
 
-body.fixed-nav #content-wrapper {
-    margin-top: 56px;
-    padding-left: 90px;
-}
+/*body.fixed-nav #content-wrapper {*/
+    /*margin-top: 56px;*/
+    /*padding-left: 90px;*/
+/*}*/
 
-body.fixed-nav.sidebar-toggled #content-wrapper {
-    padding-left: 0;
-}
+/*body.fixed-nav.sidebar-toggled #content-wrapper {*/
+    /*padding-left: 0;*/
+/*}*/
 
 @media (min-width: 768px) {
     body.fixed-nav #content-wrapper {
@@ -49,4 +49,11 @@ body.fixed-nav.sidebar-toggled #content-wrapper {
         -webkit-column-count: 2;
         column-count: 2;
     }
+}
+
+#map{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }

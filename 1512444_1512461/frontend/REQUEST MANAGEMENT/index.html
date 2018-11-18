@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
     <title>Request Management</title>
     <!-- Bootstrap core CSS-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -10,84 +11,111 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper" id="app3">
-    <!-- Đăng nhập cho driver -->
-    <div id="login" v-if="loginVisible">
-        <h3>Đăng nhập</h3>
-        <div class="form-group">
-            <label>Tên đăng nhập:</label>
-            <input type="text" id="username" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
+         <!--Đăng nhập cho driver-->
+        <div id="login" v-if="loginVisible">
+            <h3>Đăng nhập</h3>
+            <div class="form-group">
+                <label>Tên đăng nhập:</label>
+                <input type="text" id="username" class="form-control" placeholder="Tên đăng nhập..." v-model="username">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu:</label>
+                <input type="password" id="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Mật khẩu:</label>
-            <input type="password" id="password" class="form-control" placeholder="Mật khẩu..." v-model="password">
-        </div>
-        <div class="form-group">
-            <button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
-        </div>
-    </div>
-    <div id="content-wrapper" v-if="bodyVisible">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <div class="card mb-3" style="height: 550px">
-                        <div class="card-header"><i class="fa fa-table"></i><b> Danh sách requests</b></div>
-                        <div class="card-body">
-                            <div class="table-response" style="max-height: 600px">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                    <tr>
-                                        <th>Họ và tên</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Trạng thái</th>
-                                        <th>Driver</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="list">
-                                    <tr v-for="c in requests">
-                                        <td>{{c.name}}</td>
-                                        <td>{{c.phone}}</td>
-                                        <td>{{c.address}}</td>
-                                        <td>{{c.status}}</td>
-                                        <td>{{c.drivername}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+        <div id="content-wrapper" v-if="bodyVisible">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-3" style="height: 550px">
+                            <div class="card-header"><i class="fa fa-table"></i><b> Danh sách requests</b></div>
+                            <div class="card-body">
+                                <div class="table-response" style="max-height: 500px">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Họ và tên</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Trạng thái</th>
+                                            <th>Driver</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list">
+                                        <tr v-for="c in requests">
+                                            <td>{{c.name}}</td>
+                                            <td>{{c.phone}}</td>
+                                            <td>{{c.address}}</td>
+                                            <td>{{c.status}}</td>
+                                            <td>{{c.drivername}}</td>
+                                        </tr>
+                                        </tbody>
+
+                                    </table>
+                                    <button class="btn btn-success" type="button" @click="getGeocoder">Định vị</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-3">
+                            <div class="card-header"><i class="fa fa-chart-area"></i><b>Bản đồ</b></div>
+                            <div class="card-body" style="height:500px; ">
+                                <div id="map"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card mb-3">
-                        <div class="card-header"><i class="fa fa-chart-area"></i><b>Bản đồ</b></div>
-                        <div class="card-body" style="height:500px; ">
-                            <div id="map"></div>
-                        </div>
-                        <!-- <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div> -->
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
+
 </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
             integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
             crossorigin="anonymous"></script>
+
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBYBMYaUEnQ9A42480K33UWa3uuN0dN4E&callback=initMap"-->
-            <!--async defer></script>-->
+
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false&key=AIzaSyBl4QyHMxlZar0aVUVaJmEbqYV8TioCQLM&callback=initMap"
+        async defer></script>
     <script src="index.js"></script>
+<!--<script>-->
+    <!--var map;-->
+    <!--function initMap() {-->
+        <!--map = new google.maps.Map(document.getElementById('map'), {-->
+            <!--center: {lat: -34.397, lng: 150.644},-->
+            <!--zoom: 8-->
+        <!--});-->
+    <!--}-->
+<!--</script>-->
 </body>
 </html>

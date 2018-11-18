@@ -297,7 +297,7 @@ var vm = new Vue({
 
         transition: function (result) {
             var self = this;
-            self.i = 0;
+            self.index = 0;
             self.tranLat = (result[0] - self.geocoder.lat) / self.numDeltas;
             self.tranLng = (result[0] - self.geocoder.lng) / self.numDeltas;
             self.moveMarker();
@@ -323,7 +323,6 @@ var vm = new Vue({
                 alert("Vui lòng chọn chuyến cần nhận !!!");
                 return;
             } else {
-                console.log($('#tableOrder').DataTable().row('.selected').data())
                 var self = this;
                 self.idUpdate = parseInt($('#tableOrder').DataTable().row('.selected').data()[0]);
                 self.requestVisible = true;
@@ -339,6 +338,7 @@ var vm = new Vue({
                         }
                     }
                 }).then(function () {
+                    console.log("avc");
                     self.initMap();
                 })
             }
