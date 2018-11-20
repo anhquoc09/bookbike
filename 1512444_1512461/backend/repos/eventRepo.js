@@ -20,7 +20,7 @@ exports.updateGeocoder=(id,lat,lng)=>{
 };
 
 exports.addEvent = userEntity => {
-    var sql = `insert into requestevent(name,phone,address,note,time,status) values('${userEntity.name}','${userEntity.phone}','${userEntity.address}','${userEntity.note}','${userEntity.time}','${userEntity.status}')`;
+    var sql = `insert into requestevent(name,phone,address,note,time,status,idreceiver) values('${userEntity.name}','${userEntity.phone}','${userEntity.address}','${userEntity.note}','${userEntity.time}','${userEntity.status}','${userEntity.iduser}')`;
     return db.insert(sql);
 };
 

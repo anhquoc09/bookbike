@@ -4,6 +4,11 @@ var vm = new Vue({
         idmanager: "",
         username: "",
         password: "",
+        repassword: "",
+        fullname: "",
+        email: "",
+        phone: "",
+        dob: "",
         requests: [],
         acToken: "",
         rfToken: "",
@@ -105,8 +110,9 @@ var vm = new Vue({
                         self.loginVisible = true;
                         self.bodyVisible = false;
                     }
-                }).then(function () {
-            })
+                })
+                .then(function () {
+                })
         },
 
         setupSSE: function(){

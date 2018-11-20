@@ -31,6 +31,18 @@ exports.adminlogin = loginEntity =>{
     return db.load(sql);
 };
 
+exports.receiverLogin = loginEntity =>{
+  var md5_pwd = md5(loginEntity.password);
+  var sql = `SELECT * FROM users WHERE username = '${loginEntity.username}' and password = '${md5_pwd}' and permission = '${2}'`;
+  return db.load(sql);
+};
+
+exports.addReceiver = userEntity => {
+    var md5_pwd = md5(userEntity.password);
+    var sql = `insert into users(username, password, name, email, DOB, permission, phone) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}')`;
+    return db.load(sql);
+};
+
 // exports.loadAll = () =>{
 //     var sql = 'select * from city';
 //     console.log(db.load(sql));

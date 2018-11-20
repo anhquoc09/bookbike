@@ -71,7 +71,6 @@ router.post('/adminlogin',(req,res)=>{
     // }
     userRepo.adminlogin(req.body)
         .then(rows => {
-            console.log(rows);
             if(rows.length > 0){
                 var userEntity = rows[0];
                 var acToken = authRepo.generateAccessToken();
@@ -96,6 +95,55 @@ router.post('/adminlogin',(req,res)=>{
                     auth: false
                 });
             }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console');
+        })
+});
+
+router.post('/receiverlogin',(req,res)=>{
+    userRepo.receiverLogin(req.body)
+        .then(rows=>{
+            if(rows.length > 0){
+                var receiverEntity = rows[0];
+                var acToken = authRepo.generateAccessToken();
+                var rfToken = authRepo.generateRefreshToken();
+
+                authRepo.updateRefreshToken(receiverEntity.iduser,rfToken)
+                    .then(value=>{
+                        res.json({
+                            auth: true,
+                            user: receiverEntity,
+                            access_token : acToken,
+                            refresh_token : rfToken
+                        });
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.statusCode = 500;
+                        res.end("View error log on console ");
+                    })
+            }else {
+                res.json({
+                    auth: false
+                })
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console');
+        })
+});
+
+router.post('/addreceiver',(req,res)=>{
+    userRepo.addReceiver(req.body)
+        .then(value => {
+            console.log(value);
+            res.statusCode = 201;
+            res.json(req.body);
         })
         .catch(err=>{
             console.log(err);

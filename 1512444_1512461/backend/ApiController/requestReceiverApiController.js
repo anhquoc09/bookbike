@@ -17,7 +17,8 @@ router.post('/',(req,res)=>{
         address: req.body.address,
         note: req.body.note,
         time: moment().format("YYYY-MM-DD HH:mm:ss"),
-        status: 1 // chưa được định vị
+        status: 1, // chưa được định vị
+        iduser: req.body.iduser
     };
 
     eventRepo.addEvent(entity).then((value)=>{
