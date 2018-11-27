@@ -118,26 +118,45 @@ var vm = new Vue({
 
         booking: function(){
             var self = this;
-            axios.post('http://localhost:3000/requestReceiver',{
-                iduser: self.iduser,
-                name: self.nameRequest,
-                phone: self.phoneRequest,
-                address: self.addressRequest,
-                note: self.noteRequest
-            },{headers: {token: self.acToken}})
-                .then(response =>{
-                    alert("Bạn vui lòng chờ điện thoại từ  tài xế !!!");
-                })
-                .catch(err=>{
-                    if(err.response.status === 401){
-                        new Promise(function(resole){
-                            self.refreshToken();
-                        }).then(()=>{
-                        });
-                        return;
-                    }
-                }).then(function(){});
+            if (self.checkRequest()) {
+                axios.post('http://localhost:3000/requestReceiver', {
+                    iduser: self.iduser,
+                    name: self.nameRequest,
+                    phone: self.phoneRequest,
+                    address: self.addressRequest,
+                    note: self.noteRequest
+                }, {headers: {token: self.acToken}})
+                    .then(response => {
+                        alert("Bạn vui lòng chờ điện thoại từ  tài xế !!!");
+                    })
+                    .catch(err => {
+                        if (err.response.status === 401) {
+                            new Promise(function (resole) {
+                                self.refreshToken();
+                            }).then(() => {
+                            });
+                            return;
+                        }
+                    }).then(function () {
+                });
+            }
+        },
 
+        checkRequest: function() {
+            var self = this;
+            if (self.nameRquest == "") {
+                alert("Không được bỏ trống tên");
+                return false;
+            }
+            if (self.phoneRequest == "") {
+                alert("Không được bỏ trống số điện thoại");
+                return false;
+            }
+            if (self.addressRequest == "") {
+                alert("Không được bỏ trống địa chỉ");
+                return false;
+                return true;
+            }
         },
 
         refreshToken: function(){
