@@ -1,6 +1,5 @@
-var vm = new Vue({
-    el: '#app3',
-    data: {
+function getDefaultData(){
+    return{
         idmanager: "",
         username: "",
         password: "",
@@ -16,11 +15,17 @@ var vm = new Vue({
         geocoder: {lat: 10.7623314, lng: 106.6820053},
         loginVisible: true,
         bodyVisible: false,
+        navbarVisible: false,
         index: 0,
         tranLat: 0,
         tranLng: 0,
         numDeltas: 100,
-    },
+    }
+}
+
+var vm = new Vue({
+    el: '#app3',
+    data: getDefaultData(),
     methods: {
         login: function () {
             var self = this;
@@ -31,6 +36,7 @@ var vm = new Vue({
                 }).then(function (response) {
                     self.bodyVisible = true;
                     self.loginVisible = false;
+                    self.navbarVisible = true;
                     self.acToken = response.data.access_token;
                     self.rfToken = response.data.refresh_token;
                     self.iduser = response.data.user.iduser;
@@ -38,6 +44,7 @@ var vm = new Vue({
                 }).catch(function (err) {
                     alert("username và password không đúng !!!");
                     self.bodyVisible = false;
+                    self.navbarVisible = false;
                     self.login();
                 });
             } else {
@@ -260,5 +267,12 @@ var vm = new Vue({
                 })
             }
         },
+
+        logout: function(){
+            var self = this;
+            var def = getDefaultData();
+            Object.assign(this.$data,def);
+            console.log(self.username);
+        }
     }
 });

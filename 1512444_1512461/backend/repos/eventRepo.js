@@ -5,18 +5,9 @@ exports.loadAll = () => {
     return db.load(sql);
 };
 exports.loadReceiverNotStatus=()=>{
-    var sql = `select id_request,name,phone,address,note,status ,DATE_FORMAT(time, "%d/%m/%Y %H:%i:%s")AS time from requestevent where status='${1}'`;
+    var sql = `select id_request,name,phone,address,note,status,addressReverse ,DATE_FORMAT(time, "%d/%m/%Y %H:%i:%s")AS time from requestevent where status='${1}'`;
 
     return db.load(sql);
-};
-
-exports.updateGeocoder=(id,lat,lng)=>{
-    var sql = `update requestevent set lat = '${lat}',
-                                    lng = '${lng}',
-    								status =  '${2}'
-    								where id_request ='${id}'`;
-
-    return db.insert(sql);
 };
 
 exports.addEvent = userEntity => {
@@ -24,7 +15,12 @@ exports.addEvent = userEntity => {
     return db.insert(sql);
 };
 
-exports.receiveRequest  = (iduser,id_request) =>{
+exports.receiveRequest  = (iduser,id_request,geocoder) =>{
     var sql =  `update requestevent set iduser = '${iduser}', status = '${0}' where id_request = '${id_request}'`;
+    return db.insert(sql);
+};
+
+exports.reverseAddress = (id_request,addressReverse,geocoder)=>{
+    var sql = `update requestevent set addressReverse = '${addressReverse}', lat = '${geocoder.lat}', lng = '${geocoder.lng}' where id_request = '${id_request}'`;
     return db.insert(sql);
 };

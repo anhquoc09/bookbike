@@ -1,9 +1,9 @@
 window.onload = function () {
     vm.setupSSE();
 };
-var vm = new Vue({
-    el: '#app2',
-    data: {
+
+function getDefaultData(){
+    return {
         iduser: "",
         username: "",
         password: "",
@@ -17,6 +17,7 @@ var vm = new Vue({
         rfToken: "",
         geocoder: {lat: 10.7623314, lng: 106.6820053},
         address: "257 Nguyễn Văn Cừ Quận 5",
+        addressReverseIndex: "",
         idUpdate: 0,
         msg: "",
         err: "",
@@ -24,11 +25,17 @@ var vm = new Vue({
         registVisible: false,
         requestVisible: false,
         mapVisible: false,
+        navbarVisible: false,
         numDeltas: 100,
         tranLat: 0,
         tranLng: 0,
         index: 0
-    },
+    }
+}
+
+var vm = new Vue({
+    el: '#app2',
+    data: getDefaultData(),
     methods: {
         login: function () {
             var self = this;
@@ -41,6 +48,7 @@ var vm = new Vue({
                     self.loginVisible = false;
                     self.registVisible = false;
                     self.mapVisible = false;
+                    self.navbarVisible = true;
                     self.acToken = response.data.access_token;
                     self.rfToken = response.data.refresh_token;
                     self.iduser = response.data.user.iduser;
@@ -49,6 +57,7 @@ var vm = new Vue({
                 }).catch(function (err) {
                     alert("username và password không đúng !!!");
                     self.requestVisible = false;
+                    self.navbarVisible = false;
                     self.login();
                 });
             } else {
@@ -124,6 +133,7 @@ var vm = new Vue({
             var self = this;
             axios.get('http://localhost:3000/locaIdController/getRequestReceiver', {headers: {token: self.acToken}})
                 .then(response => {
+                    console.log(response.data);
                     self.requests = response.data;
                     self.rfTable();
                 })
@@ -221,7 +231,7 @@ var vm = new Vue({
 
         initMap: function () {
             var self = this;
-            var geocoder = new google.maps.Geocoder();
+            geocoder = new google.maps.Geocoder();
             geocoder.geocode({'address': self.address}, function (result, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     self.geocoder.lat = result[0].geometry.location.lat();
@@ -241,11 +251,23 @@ var vm = new Vue({
                     });
 
                     marker.addListener('click', self.toggleBounce);
+                    self.reverseGeocoding(marker);
 
-                    google.maps.event.addListener(map, 'click', function (event) {
-                        var result = [event.latLng.lat(), event.latLng.lng()];
-                        self.transition(result);
-                    })
+                    // google.maps.event.addListener(map, 'click', function (event) {
+                    //     var result = [event.latLng.lat(), event.latLng.lng()];
+                    //     self.transition(result);
+                    // });
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            map.setCenter(pos);
+                            marker.setPosition(pos);
+                        });
+                    }
                 } else {
                     alert("Địa chỉ không được tìm thấy !!!");
                     var myOptions = {
@@ -266,8 +288,8 @@ var vm = new Vue({
                         self.transition(result);
                     })
                 }
-            })
-
+            });
+            console.log(self.geocoder);
         },
 
         toggleBounce: function () {
@@ -278,21 +300,56 @@ var vm = new Vue({
             }
         },
 
+        changeAddress: function (address) {
+            geocoder.geocode({'address': address}, function (results, status) {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    marker.setPosition(results[0].geometry.location);
+                } else {
+                    console.log('err : ' + status);
+                }
+            });
+        },
+
         reverseGeocoding: function (marker) {
+            var self = this;
+            var geocoder = new google.maps.Geocoder();
             google.maps.event.addListener(marker, 'dragend', function (evt) {
+                self.geocoder.lat = evt.latLng.lat();
+                self.geocoder.lng = evt.latLng.lng();
                 geocoder.geocode({'location': evt.latLng}, function (results, status) {
                     if (status == "OK") {
-                        alert("Avc");
-                        console.log(evt);
+                        if (results[0]) {
+                            self.addressReverseIndex = results[0].formatted_address;
+                        }
                     } else {
                         console.log('Geocoder failed due to: ' + status);
                     }
                 })
             });
 
-            google.maps.event.addListener(markerobject, 'drag', function (evt) {
+            google.maps.event.addListener(marker, 'drag', function (evt) {
                 console.log("marker is being dragged");
             });
+        },
+
+        updateGeocode: function(){
+          var self = this;
+          console.log(self.geocoder);
+          if(self.addressReverseIndex === ""){
+              alert("Vui lòng chọn địa chỉ mới trên bản đồ !!!")
+          }else{
+              axios.post('http://localhost:3000/locaIdController/reverseAddress', {
+                  id_request: self.idUpdate,
+                  addressReverse: self.addressReverseIndex,
+                  geocoder: self.geocoder,
+              },{ headers: { token: self.acToken } }).then(function (response) {
+                  self.getAllRequest();
+                  self.addressReverseIndex = "";
+              }).catch(function (err) {
+                  console.log('err : ' + err);
+              });
+          }
         },
 
         transition: function (result) {
@@ -338,7 +395,6 @@ var vm = new Vue({
                         }
                     }
                 }).then(function () {
-                    console.log("avc");
                     self.initMap();
                 })
             }
@@ -349,7 +405,8 @@ var vm = new Vue({
             axios.post('http://localhost:3000/locaIdController/receiveRequest', {
                 id_request: self.idUpdate,
                 idUser: self.iduser,
-            },{ headers: { token: self.token } })
+                geocoder: self.geocoder
+            },{ headers: { token: self.acToken } })
                 .then(function (response) {
                     console.log(response.data);
                     self.msg="Cập nhật thành công";
@@ -361,9 +418,9 @@ var vm = new Vue({
                             resolve();
                         }).then(function () {
                             if (self.mapVisible===true){
-                                self.updateGeocoder();
+                                self.getGeocoder();
                             }
-                        })
+                        });
                         return;
                     }else {
                         self.err="Không thể cập nhật";
@@ -379,6 +436,13 @@ var vm = new Vue({
             self.requestsVisible = true;
             self.msg="";
             self.err="";
-        }
+        },
+
+        logout: function(){
+            var self = this;
+            var def = getDefaultData();
+            Object.assign(this.$data,def);
+            console.log(self.username);
+        },
     }
 });

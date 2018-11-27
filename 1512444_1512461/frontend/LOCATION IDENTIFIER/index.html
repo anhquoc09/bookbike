@@ -14,6 +14,25 @@
 </head>
 <body>
 <div class="container" id="app2">
+    <div id="nav" v-if="navbarVisible">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">GRAB 4.0</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <button class="btn btn-success" @click="logout">Logout <span class="sr-only">(current)</span></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
     <!-- Đăng nhập cho driver -->
     <div id="login" v-if="loginVisible">
         <h3>Đăng nhập</h3>
@@ -83,6 +102,7 @@
                         <th><a>Số điện thoại</a></th>
                         <th><a>Ghi chú</a></th>
                         <th><a>Thời gian đặt</a></th>
+                        <th><a>Địa chỉ Reverse</a></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -93,6 +113,7 @@
                         <td>{{c.phone}}</td>
                         <td>{{c.note}}</td>
                         <td>{{c.time}}</td>
+                        <td>{{c.addressReverse}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -102,7 +123,8 @@
     </div>
     <br>
     <div id="eventBtn" v-if="mapVisible">
-        <button class="btn btn-success" type="button" @click="receiveRequest">Nhận cuốc</button>
+        <button class="btn btn-success" type="button" @click="receiveRequest">Nhận chuyến</button>
+        <button class="btn btn-success" type="button" @click="updateGeocode">Đổi địa chỉ</button>
         <button class="btn btn-success" type="button" @click="closeMap">Đóng</button>
     </div>
 

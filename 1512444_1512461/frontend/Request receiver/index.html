@@ -4,27 +4,30 @@
     <title>Request Receiver</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
-        #map {
-            width: 100%;
-            height: 600px;
-            background-color: grey;
-        }
 
-        /* Optional: Makes the sample page fill the window. */
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
 <body>
 <div class="container" id="app1">
+    <div id="nav" v-if="navbarVisible">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <!-- Brand -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">GRAB 4.0</a>
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <button class="btn btn-success" @click="logout">Logout <span class="sr-only">(current)</span></button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
     <!-- Đăng nhập cho user -->
     <div id="login" v-if="loginVisible">
         <h3>Đăng nhập</h3>
@@ -79,7 +82,7 @@
     </div>
     <!--đặt xe cho chuyến đi -->
     <div id="body" v-if="bodyVisible">
-        <h1>Đặt xe máy</h1>
+        <h3>Đặt xe máy</h3>
         <div class="row">
             <div class="col-sm-6">
                 <label>Tên
@@ -96,7 +99,7 @@
                 <label>Ghi chú
                     <textarea id="note" rows="6" placeholder="Chở một bạn nữ xinh xắn..." v-model="noteRequest"></textarea>
                 </label>
-                <div>
+                <div class="oder">
                     <button type="button" class="btn btn-success" @click="booking">Đặt chuyến</button>
                 </div>
             </div>

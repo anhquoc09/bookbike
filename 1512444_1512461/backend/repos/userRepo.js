@@ -14,7 +14,7 @@ exports.addUser = userEntity =>{
     // }
 
     var md5_pwd = md5(userEntity.password);
-    var sql = `insert into users(username, password, name, email, DOB, permission, phone) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}')`;
+    var sql = `insert into users(username, password, name, email, DOB, permission, phone,status) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}','${0}')`;
 
     return db.insert(sql);
 };
@@ -41,6 +41,17 @@ exports.addReceiver = userEntity => {
     var md5_pwd = md5(userEntity.password);
     var sql = `insert into users(username, password, name, email, DOB, permission, phone) values('${userEntity.username}', '${md5_pwd}', '${userEntity.name}', '${userEntity.email}', '${userEntity.DOB}', '${userEntity.permission}','${userEntity.phone}')`;
     return db.load(sql);
+};
+
+exports.getDriverAllReady = () =>{
+    //status == 0 : chưa có xe status == 1: đã có xe
+    var sql = `select * from users where status = '${0}'`;
+    return db.load(sql);
+};
+
+exports.updatePosDriver = (iduser,currenpos)=>{
+  var sql = `update users set lat = '${currenpos.lat}', lng= '${currenpos.lng}' where iduser = '${iduser}'`;
+  return db.insert(sql);
 };
 
 // exports.loadAll = () =>{

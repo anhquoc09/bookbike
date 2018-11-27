@@ -1,24 +1,29 @@
+function getDefaultData() {
+    return {
+        iduser: "",
+        username: "",
+        password: "",
+        repassword: "",
+        fullname: "",
+        email: "",
+        phone: "",
+        dob: "",
+        acToken: "",
+        rfToken: "",
+        loginVisible: true,
+        registVisible: false,
+        bodyVisible: false,
+        navbarVisible:false,
+        nameRequest: "",
+        phoneRequest: "",
+        addressRequest: "",
+        noteRequest: "",
+    }
+}
+
 var vm = new Vue({
    el: '#app1',
-   data:{
-       iduser: "",
-       username: "",
-       password: "",
-       repassword: "",
-       fullname: "",
-       email: "",
-       phone: "",
-       dob: "",
-       acToken: "",
-       rfToken: "",
-       loginVisible: true,
-       registVisible: false,
-       bodyVisible: false,
-       nameRequest: "",
-       phoneRequest: "",
-       addressRequest: "",
-       noteRequest: "",
-   },
+   data: getDefaultData(),
     methods: {
        login: function(){
            var self = this;
@@ -29,6 +34,8 @@ var vm = new Vue({
                }).then(function (response) {
                    self.bodyVisible = true;
                    self.loginVisible = false;
+                   self.navbarVisible = true;
+                   self.registVisible = false;
                    self.acToken = response.data.access_token;
                    self.rfToken = response.data.refresh_token;
                    self.iduser = response.data.user.iduser;
@@ -38,10 +45,12 @@ var vm = new Vue({
                }).catch(function (err) {
                    alert("username và password không đúng !!!");
                    self.bodyVisible = false;
+                   self.navbarVisible = false;
                    self.login();
                });
            } else {
                self.loginVisible = true;
+               self.registVisible = false;
                self.bodyVisible = false;
            }
        },
@@ -147,6 +156,13 @@ var vm = new Vue({
               })
               .then(function () {
               })
+        },
+
+        logout: function(){
+           var self = this;
+           var def = getDefaultData();
+           Object.assign(this.$data,def);
+           console.log(self.username);
         },
     }
 });

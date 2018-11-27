@@ -1,15 +1,134 @@
-body {
-    padding: 50px;
-    background-color: #ffffff;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+    position: relative;
+    width: 36px;
+    font-size: 24px;
 }
 
-h1 {
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+    position: absolute;
+    right: 0;
+    font-family: sans-serif;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+    top: 3px;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+    top: -10px;
+}
+
+@media (min-width: 576px) {
+    .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
+        text-align: center;
+        display: table-cell;
+        height: 70px;
+        vertical-align: middle;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
+        display: block;
+        width: 48px;
+        margin: 2px auto 4px auto;
+        top: 0;
+        line-height: 24px;
+    }
+
+    .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
+        top: -7px;
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
+        text-align: center;
+        display: table-cell;
+        height: 70px;
+        vertical-align: middle;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa {
+        display: block;
+        width: 48px;
+        margin: 2px auto 4px auto;
+        top: 0;
+        line-height: 24px;
+    }
+
+    .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa > .badge {
+        top: -7px;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link {
+        text-align: center;
+        display: table-cell;
+        height: 70px;
+        vertical-align: middle;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa {
+        display: block;
+        width: 48px;
+        margin: 2px auto 4px auto;
+        top: 0;
+        line-height: 24px;
+    }
+
+    .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa > .badge {
+        top: -7px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link {
+        text-align: center;
+        display: table-cell;
+        height: 70px;
+        vertical-align: middle;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa {
+        display: block;
+        width: 48px;
+        margin: 2px auto 4px auto;
+        top: 0;
+        line-height: 24px;
+    }
+
+    .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa > .badge {
+        top: -7px;
+    }
+}
+
+body {
+    margin: auto;
+}
+
+h3 {
     margin-bottom: 20px;
     font-size: 50px;
     font-weight: bold;
     text-align: center;
 }
+
+div#login, #regist {
+    width: 50%;
+    margin: auto;
+    font-size: 14px;
+}
+
 form {
     width: 100%;
     height: 100%;
@@ -24,7 +143,7 @@ label {
 
 textarea {
     width: 100%;
-    height: 104px;
+    height: 120px;
     font-size: 14px;
     margin: 8px 0;
     padding: 8px 20px;
@@ -44,19 +163,10 @@ input{
     box-sizing: border-box;
     display: inline-block;
 }
-[type=button] {
-    width: auto;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 22px;
-    background-color: #0889ea;
-    color: white;
-    cursor: pointer;
-}
-[type=button]:hover {
-    background-color: #0860ab;
-}
 
+.oder {
+    padding-top: 22px;
+}
 #error {
     color: red;
     font-size: 28px;
@@ -73,4 +183,3 @@ input{
     height: 600px;
     background-color: grey;
 }
-
