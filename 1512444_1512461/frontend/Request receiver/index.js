@@ -144,7 +144,7 @@ var vm = new Vue({
 
         checkRequest: function() {
             var self = this;
-            if (self.nameRquest == "") {
+            if (self.nameRequest == "") {
                 alert("Không được bỏ trống tên");
                 return false;
             }
