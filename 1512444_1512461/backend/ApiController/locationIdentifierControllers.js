@@ -44,4 +44,16 @@ router.post('/receiveRequest', (req, res) => {
         });
 });
 
+router.post('/reverseAddress',(req,res)=>{
+    requestRepo.reverseAddress(req.body.id_request,req.body.addressReverse,req.body.geocoder)
+        .then(value=>{
+            res.json(value);
+        })
+        .catch(err=>{
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console');
+        });
+});
+
 module.exports = router;
