@@ -155,8 +155,8 @@ var vm = new Vue({
             if (self.addressRequest == "") {
                 alert("Không được bỏ trống địa chỉ");
                 return false;
-                return true;
             }
+            return true;
         },
 
         refreshToken: function(){
